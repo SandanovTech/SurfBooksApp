@@ -7,7 +7,7 @@ import retrofit2.awaitResponse
 import javax.inject.Inject
 
 class RemoteDataSourceImpl @Inject constructor(private val api: GoogleApi) : RemoteDataSource {
-    override suspend fun getBooksFromApiByName(name: String): BookResponse? {
+    override suspend fun getBooksFromApiByName(name: String): BookResponse {
         return try {
             val response = api.getBooksByName(name).awaitResponse()
             if (response.isSuccessful) {
@@ -21,11 +21,11 @@ class RemoteDataSourceImpl @Inject constructor(private val api: GoogleApi) : Rem
                 )
             } else {
                 Log.e("RemoteDataSourceImpl", "response isn't success")
-                null
+                throw (IllegalStateException("API request failed with code: ${response.code()}"))
             }
         } catch (e: Exception) {
             Log.e("RemoteDataSourceImpl", e.message.toString())
-            null
+            throw e
         }
     }
 }

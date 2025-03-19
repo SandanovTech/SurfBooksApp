@@ -1,4 +1,4 @@
-package com.example.surfbooksapp.ui.theme
+package com.example.surfbooksapp.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

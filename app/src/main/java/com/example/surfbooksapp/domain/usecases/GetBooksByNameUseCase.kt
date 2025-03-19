@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetBooksByNameUseCase @Inject constructor(private val repository: Repository) {
-    fun getBooksByNameUseCase(name: String) : Flow<List<Book>> = flow {
+    fun invoke(name: String) : Flow<List<Book>> = flow {
        val books = repository.getBooksByName(name)
-        emit(books)
+        emit(listOf(books))
     }
 }

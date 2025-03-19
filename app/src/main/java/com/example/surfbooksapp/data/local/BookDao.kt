@@ -1,10 +1,15 @@
 package com.example.surfbooksapp.data.local
 
 import androidx.room.Dao
-import com.example.surfbooksapp.data.local.model.BookEntity
-import kotlinx.coroutines.flow.Flow
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
 
 @Dao
 interface BookDao {
-    fun getBookByName() : Flow<List<BookEntity>>
+    @Query("INSERT INTO books (id, isFavourite) VALUES (:itemId, :isFavourite)", )
+    suspend fun addToFavourite(itemId: String, isFavourite: Boolean)
+
+    @Query("DELETE from books Where id = :itemId")
+    suspend fun deleteFromFavourite(itemId: String)
 }

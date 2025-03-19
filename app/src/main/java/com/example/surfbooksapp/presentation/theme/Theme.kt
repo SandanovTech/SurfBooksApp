@@ -1,4 +1,4 @@
-package com.example.surfbooksapp.ui.theme
+package com.example.surfbooksapp.presentation.theme
 
 import android.app.Activity
 import android.os.Build

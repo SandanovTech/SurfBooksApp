@@ -1,6 +1,9 @@
 package com.example.surfbooksapp.di
 
 import com.example.surfbooksapp.data.RepositoryImpl
+import com.example.surfbooksapp.data.local.BookDao
+import com.example.surfbooksapp.data.local.repository.LocalDataSource
+import com.example.surfbooksapp.data.local.repository.LocalDataSourceImpl
 import com.example.surfbooksapp.data.network.api.GoogleApi
 import com.example.surfbooksapp.data.network.repository.RemoteDataSource
 import com.example.surfbooksapp.data.network.repository.RemoteDataSourceImpl
@@ -19,12 +22,18 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRemoteRepository(api: GoogleApi) : RemoteDataSource = RemoteDataSourceImpl(api)
-
+    fun provideRemoteRepository(api: GoogleApi): RemoteDataSource = RemoteDataSourceImpl(api)
 
     @Provides
     @Singleton
-    fun provideRepositoryImpl(remoteDataSource: RemoteDataSourceImpl) : Repository = RepositoryImpl(remoteDataSource)
+    fun provideLocalRepository(bookDao: BookDao): LocalDataSource = LocalDataSourceImpl(bookDao)
+
+    @Provides
+    @Singleton
+    fun provideRepositoryImpl(
+        localDataSource: LocalDataSourceImpl,
+        remoteDataSource: RemoteDataSourceImpl,
+    ): Repository = RepositoryImpl(localDataSource, remoteDataSource)
 
     @Provides
     @Singleton
