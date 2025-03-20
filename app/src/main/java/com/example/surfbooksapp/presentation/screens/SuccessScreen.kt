@@ -13,11 +13,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.surfbooksapp.presentation.utils.CardElement
 import com.example.surfbooksapp.presentation.viewModels.MainViewModel
 
 @Composable
-fun SuccessScreen(modifier: Modifier = Modifier) {
+fun SuccessScreen(navController: NavHostController, modifier: Modifier = Modifier) {
     val vm: MainViewModel = hiltViewModel()
     val books by vm.books.collectAsState()
     LazyVerticalGrid(
@@ -30,7 +31,7 @@ fun SuccessScreen(modifier: Modifier = Modifier) {
         contentPadding = PaddingValues(16.dp)
     ) {
         items(books) { it ->
-            CardElement(book = it, vm = vm)
+            CardElement(book = it, vm = vm, navController = navController)
         }
     }
 }

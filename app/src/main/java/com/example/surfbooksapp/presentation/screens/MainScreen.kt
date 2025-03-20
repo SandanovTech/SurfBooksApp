@@ -49,7 +49,7 @@ fun MainScreen(navController: NavHostController) {
             }
 
             is MainScreenState.Success -> {
-                SuccessScreen(modifier = Modifier.padding(paddingValues))
+                SuccessScreen(navController, modifier = Modifier.padding(paddingValues))
             }
 
             MainScreenState.Initial -> {

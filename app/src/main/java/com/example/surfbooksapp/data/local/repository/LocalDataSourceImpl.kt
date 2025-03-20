@@ -19,6 +19,18 @@ class LocalDataSourceImpl @Inject constructor(private val bookDao: BookDao) : Lo
         bookDao.deleteFromFavourite(book.mapToEntity())
     }
 
+    override suspend fun insertAllBooks(books: List<BookEntity>) {
+        return bookDao.insertAllBooks(books)
+    }
+
+    override suspend fun getBookById(bookId: String): BookEntity {
+        return bookDao.getBookById(bookId)
+    }
+
+    override suspend fun getFavouriteBooks(isFavourite: Boolean): List<BookEntity> {
+        return bookDao.getFavouriteBooks(isFavourite)
+    }
+
     override fun getAllBooks(): Flow<List<BookEntity>> {
         return bookDao.getAllBooks()
     }

@@ -29,6 +29,10 @@ fun Book.mapToEntity() : BookEntity {
     return BookEntity(this.id, this.volumeInfo?.mapToVolumeInfoLocal(), this.isFavourite)
 }
 
+fun List<Book>.mapToEntity() : List<BookEntity> {
+    return this.map { it.mapToEntity() }
+}
+
 fun List<BookEntity>.mapToDomainListBook() : List<Book> {
     return this.map { it.mapToDomain() }
 }

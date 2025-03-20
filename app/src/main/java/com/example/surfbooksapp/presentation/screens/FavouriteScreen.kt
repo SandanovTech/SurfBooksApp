@@ -19,7 +19,7 @@ import com.example.surfbooksapp.presentation.viewModels.FavouriteViewModel
 @Composable
 fun FavouriteScreen(navController: NavHostController) {
     val vm: FavouriteViewModel = hiltViewModel()
-    val books by  vm.books.collectAsState()
+    val books by vm.books.collectAsState()
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 120.dp),
@@ -30,7 +30,7 @@ fun FavouriteScreen(navController: NavHostController) {
         contentPadding = PaddingValues(16.dp)
     ) {
         items(books) {
-            CardElement(book = it, vm = vm)
+            CardElement(book = it, vm = vm, navController = navController)
         }
     }
 }

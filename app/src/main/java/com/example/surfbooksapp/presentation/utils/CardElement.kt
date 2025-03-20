@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,25 +30,35 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.example.surfbooksapp.R
 import com.example.surfbooksapp.domain.model.Book
+import com.example.surfbooksapp.presentation.navigation.AppScreens
 import com.example.surfbooksapp.presentation.viewModels.BaseViewModel
+import com.example.surfbooksapp.presentation.viewModels.FavouriteViewModel
 
 @Composable
 fun <viewModel : BaseViewModel> CardElement(
     modifier: Modifier = Modifier,
     book: Book,
     vm: viewModel,
+    navController : NavHostController
 ) {
     var isFavorite by rememberSaveable { mutableStateOf(book.isFavourite) }
-    // Обновляем isFavorite при изменении book
-    val context = LocalContext.current
+    val viewModel : FavouriteViewModel = hiltViewModel()
+    if (book.isFavourite) {
+        viewModel.getBooksByFavourite(book.isFavourite)
+    }
     Card(
         modifier = Modifier
             .width(160.dp)
             .height(300.dp)
+            .clickable {
+                navController.navigate("${AppScreens.DetailsScreen.route}/${book.id}")
+            }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -90,9 +100,7 @@ fun <viewModel : BaseViewModel> CardElement(
             IconButton(
                 onClick = {
                     isFavorite = !isFavorite
-                    Log.d("DDDD", isFavorite.toString())
                     if (isFavorite) {
-                        mToast(context)
                         vm.addToFavorite(book, isFavorite)
                     } else {
                         isFavorite = false
@@ -116,8 +124,4 @@ fun <viewModel : BaseViewModel> CardElement(
             }
         }
     }
-}
-
-private fun mToast(context: Context){
-    Toast.makeText(context, "This is a Sample Toast", Toast.LENGTH_LONG).show()
 }
