@@ -2,21 +2,18 @@ package com.example.surfbooksapp.data.local.repository
 
 import com.example.surfbooksapp.data.local.BookDao
 import com.example.surfbooksapp.data.local.model.BookEntity
-import com.example.surfbooksapp.data.mapper.mapToEntity
-import com.example.surfbooksapp.data.mapper.mapToVolumeInfoLocal
-import com.example.surfbooksapp.domain.model.Book
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LocalDataSourceImpl @Inject constructor(private val bookDao: BookDao) : LocalDataSource {
-    override suspend fun addToFavourite(book: Book, isFavourite: Boolean) {
-        book.volumeInfo?.let {volumeInfo ->
-            bookDao.addToFavourite(book.id, volumeInfo.mapToVolumeInfoLocal(), isFavourite)
-        }
+    override suspend fun addToFavourite(book: BookEntity) {
+        book.isFavourite = true
+        bookDao.addToFavourite(book)
     }
 
-    override suspend fun deleteFromFavourite(book: Book) {
-        bookDao.deleteFromFavourite(book.mapToEntity())
+    override suspend fun deleteFromFavourite(book: BookEntity) {
+        book.isFavourite = false
+        bookDao.deleteFromFavourite(book)
     }
 
     override suspend fun insertAllBooks(books: List<BookEntity>) {
@@ -27,11 +24,12 @@ class LocalDataSourceImpl @Inject constructor(private val bookDao: BookDao) : Lo
         return bookDao.getBookById(bookId)
     }
 
-    override suspend fun getFavouriteBooks(isFavourite: Boolean): List<BookEntity> {
-        return bookDao.getFavouriteBooks(isFavourite)
+    override suspend fun getFavouriteBooks(isFavourite : Boolean): List<BookEntity> {
+        val isFavouriteInt = if (isFavourite) 1 else 0
+        return bookDao.getFavouriteBooks(isFavouriteInt)
     }
 
-    override fun getAllBooks(): Flow<List<BookEntity>> {
+    override suspend fun getAllBooks(): List<BookEntity> {
         return bookDao.getAllBooks()
     }
 }

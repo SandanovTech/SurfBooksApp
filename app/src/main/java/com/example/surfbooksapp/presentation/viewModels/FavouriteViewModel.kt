@@ -11,8 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,14 +19,28 @@ class FavouriteViewModel @Inject constructor(
     private val getFavouriteBooksUseCase: GetFavouriteBooksUseCase,
     private val addToFavouriteUseCase: AddToFavouriteUseCase,
     private val deleteFromFavouriteUseCase: DeleteFromFavouriteUseCase,
-) : ViewModel(), BaseViewModel{
+    private val getAllBooksUseCase: GetAllBooksUseCase
+) : ViewModel(), BaseViewModel {
 
     private val _books: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
     val books = _books.asStateFlow()
 
-    override fun addToFavorite(book: Book, isFavourite: Boolean) {
+    private val _favouriteBooks: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
+    val favouriteBooks = _favouriteBooks.asStateFlow()
+
+    init {
+        getAllBooks()
+    }
+
+    private fun getAllBooks() {
         viewModelScope.launch(Dispatchers.IO) {
-            addToFavouriteUseCase.invoke(book, isFavourite)
+            _books.value = getAllBooksUseCase.invoke()
+        }
+    }
+
+    override fun addToFavorite(book: Book) {
+        viewModelScope.launch(Dispatchers.IO) {
+            addToFavouriteUseCase.invoke(book)
         }
     }
 
@@ -38,9 +50,9 @@ class FavouriteViewModel @Inject constructor(
         }
     }
 
-    fun getBooksByFavourite(isFavourite: Boolean) {
+    override fun getBooksByFavourite(book: Book) {
         viewModelScope.launch(Dispatchers.IO) {
-            _books.value = getFavouriteBooksUseCase.invoke(isFavourite)
+            _favouriteBooks.value = _books.value.filter { it.isFavourite }
         }
     }
 }

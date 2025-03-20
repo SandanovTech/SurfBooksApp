@@ -1,8 +1,5 @@
 package com.example.surfbooksapp.presentation.utils
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -30,7 +27,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -38,19 +34,17 @@ import com.example.surfbooksapp.R
 import com.example.surfbooksapp.domain.model.Book
 import com.example.surfbooksapp.presentation.navigation.AppScreens
 import com.example.surfbooksapp.presentation.viewModels.BaseViewModel
-import com.example.surfbooksapp.presentation.viewModels.FavouriteViewModel
 
 @Composable
 fun <viewModel : BaseViewModel> CardElement(
     modifier: Modifier = Modifier,
     book: Book,
     vm: viewModel,
-    navController : NavHostController
+    navController: NavHostController
 ) {
     var isFavorite by rememberSaveable { mutableStateOf(book.isFavourite) }
-    val viewModel : FavouriteViewModel = hiltViewModel()
     if (book.isFavourite) {
-        viewModel.getBooksByFavourite(book.isFavourite)
+        vm.getBooksByFavourite(book)
     }
     Card(
         modifier = Modifier
@@ -100,10 +94,10 @@ fun <viewModel : BaseViewModel> CardElement(
             IconButton(
                 onClick = {
                     isFavorite = !isFavorite
-                    if (isFavorite) {
-                        vm.addToFavorite(book, isFavorite)
+                    book.isFavourite = isFavorite
+                    if (book.isFavourite) {
+                        vm.addToFavorite(book)
                     } else {
-                        isFavorite = false
                         vm.deleteFromFavourite(book)
                     }
                 },

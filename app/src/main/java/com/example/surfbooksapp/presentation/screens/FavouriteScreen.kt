@@ -1,5 +1,6 @@
 package com.example.surfbooksapp.presentation.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,8 +20,10 @@ import com.example.surfbooksapp.presentation.viewModels.FavouriteViewModel
 @Composable
 fun FavouriteScreen(navController: NavHostController) {
     val vm: FavouriteViewModel = hiltViewModel()
+    val favouriteBooks by vm.favouriteBooks.collectAsState()
     val books by vm.books.collectAsState()
-
+    Log.d("DdddddddddddddddddD","Favourite size: ${favouriteBooks.size}")
+    Log.d("DdddddddddddddddddD","Books size: ${books.size}")
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 120.dp),
         modifier = Modifier
@@ -29,7 +32,7 @@ fun FavouriteScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp)
     ) {
-        items(books) {
+        items(favouriteBooks) {
             CardElement(book = it, vm = vm, navController = navController)
         }
     }

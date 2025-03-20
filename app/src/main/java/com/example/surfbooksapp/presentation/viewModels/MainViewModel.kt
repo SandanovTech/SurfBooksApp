@@ -6,6 +6,7 @@ import com.example.surfbooksapp.domain.model.Book
 import com.example.surfbooksapp.domain.usecases.AddToFavouriteUseCase
 import com.example.surfbooksapp.domain.usecases.DeleteFromFavouriteUseCase
 import com.example.surfbooksapp.domain.usecases.GetBooksByNameUseCase
+import com.example.surfbooksapp.domain.usecases.GetFavouriteBooksUseCase
 import com.example.surfbooksapp.presentation.MainScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getBooksByNameUseCase: GetBooksByNameUseCase,
     private val addToFavouriteUseCase: AddToFavouriteUseCase,
+    private val getFavouriteBooksUseCase: GetFavouriteBooksUseCase,
     private val deleteFromFavouriteUseCase: DeleteFromFavouriteUseCase,
 ) : ViewModel(), BaseViewModel {
 
@@ -37,9 +39,9 @@ class MainViewModel @Inject constructor(
         _state.value = MainScreenState.Initial
     }
 
-    override fun addToFavorite(book: Book, isFavourite: Boolean) {
+    override fun addToFavorite(book: Book) {
         viewModelScope.launch(Dispatchers.IO) {
-            addToFavouriteUseCase.invoke(book, isFavourite)
+            addToFavouriteUseCase.invoke(book)
         }
     }
 
@@ -49,6 +51,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    override fun getBooksByFavourite(book: Book) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _books.value = getFavouriteBooksUseCase.invoke(book.isFavourite)
+        }
+    }
 
     fun getBooksByName(name: String) {
         _state.value = MainScreenState.Loading

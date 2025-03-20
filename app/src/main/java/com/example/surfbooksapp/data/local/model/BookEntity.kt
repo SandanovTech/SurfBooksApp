@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class BookEntity(
     @PrimaryKey val id: String,
     val volumeInfoLocal: VolumeInfoLocal? = null,
-    val isFavourite: Boolean = false,
+    var isFavourite: Boolean = false,
 )
 
 data class VolumeInfoLocal(
