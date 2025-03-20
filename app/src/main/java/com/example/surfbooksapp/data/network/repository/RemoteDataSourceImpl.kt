@@ -15,8 +15,6 @@ class RemoteDataSourceImpl @Inject constructor(private val api: GoogleApi) : Rem
                     requireNotNull(response.body()) { "Api method getBooksByName returned null" }
                 Log.d("RemoteDataSourceImpl", body.toString())
                 BookResponse(
-                    totalItems = body.totalItems,
-                    kind = body.kind,
                     items = body.items
                 )
             } else {

@@ -1,33 +1,44 @@
 package com.example.surfbooksapp.data.mapper
 
+import com.example.surfbooksapp.data.local.model.BookEntity
+import com.example.surfbooksapp.data.local.model.ImageLinksLocal
+import com.example.surfbooksapp.data.local.model.VolumeInfoLocal
+import com.example.surfbooksapp.data.network.model.BookDto
 import com.example.surfbooksapp.data.network.model.BookResponse
-import com.example.surfbooksapp.data.network.model.ImageLinks
-import com.example.surfbooksapp.data.network.model.ItemsItem
-import com.example.surfbooksapp.data.network.model.VolumeInfo
+import com.example.surfbooksapp.data.network.model.ImageLinksDto
+import com.example.surfbooksapp.data.network.model.VolumeInfoDto
 import com.example.surfbooksapp.domain.model.Book
-import com.example.surfbooksapp.domain.model.DomainImageLinks
-import com.example.surfbooksapp.domain.model.DomainItemsItem
+import com.example.surfbooksapp.domain.model.ImageLinks
+import com.example.surfbooksapp.domain.model.VolumeInfo
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-fun BookResponse.mapToDomainBook(): Book {
-    return Book(this.totalItems, this.kind, this.items?.map { it?.mapToDomainItemsItem() })
+fun BookDto.mapToDomain() : Book {
+    return Book(this.id, this.volumeInfo?.toDomain())
 }
 
-fun List<BookResponse>.mapToDomainListBook(): List<Book> {
-    return this.map { it.mapToDomainBook() }
+fun BookResponse.mapToDomainListBook() : List<Book> {
+    return this.items.map { it.mapToDomain() }
 }
 
-fun ItemsItem.mapToDomainItemsItem(): DomainItemsItem {
-    return DomainItemsItem(
-        kind = this.kind,
-        domainVolumeInfo = this.volumeInfo?.mapToDomainVolumeInfo(),
-        etag = this.etag,
-        id = this.id,
-        selfLink = this.selfLink
-    )
+fun BookEntity.mapToDomain() : Book {
+    return Book(this.id, this.volumeInfoLocal?.toDomain(), this.isFavourite)
 }
 
-fun VolumeInfo.mapToDomainVolumeInfo(): com.example.surfbooksapp.domain.model.DomainVolumeInfo {
-    return com.example.surfbooksapp.domain.model.DomainVolumeInfo(
+fun Book.mapToEntity() : BookEntity {
+    return BookEntity(this.id, this.volumeInfo?.mapToVolumeInfoLocal(), this.isFavourite)
+}
+
+fun List<BookEntity>.mapToDomainListBook() : List<Book> {
+    return this.map { it.mapToDomain() }
+}
+
+fun Flow<List<BookEntity>>.mapToDomainListFlowBook() : Flow<List<Book>> {
+    return this.map { it.mapToDomainListBook() }
+}
+
+fun VolumeInfoDto.toDomain(): VolumeInfo {
+    return VolumeInfo(
         pageCount = this.pageCount,
         printType = this.printType,
         previewLink = this.previewLink,
@@ -48,8 +59,95 @@ fun VolumeInfo.mapToDomainVolumeInfo(): com.example.surfbooksapp.domain.model.Do
     )
 }
 
-fun ImageLinks.mapToDomainImageLinks(): DomainImageLinks {
-    return DomainImageLinks(
+fun VolumeInfoLocal.toDomain(): VolumeInfo {
+    return VolumeInfo(
+        pageCount = this.pageCount,
+        printType = this.printType,
+        previewLink = this.previewLink,
+        canonicalVolumeLink = this.canonicalVolumeLink,
+        description = this.description,
+        language = this.language,
+        title = this.title,
+        imageLinks = this.imageLinksLocal?.mapToDomainImageLinks(),
+        publisher = this.publisher,
+        publishedDate = this.publishedDate,
+        categories = this.categories,
+        maturityRating = this.maturityRating,
+        allowAnonLogging = this.allowAnonLogging,
+        contentVersion = this.contentVersion,
+        authors = this.authors,
+        infoLink = this.infoLink,
+        subtitle = this.subtitle
+    )
+}
+
+fun VolumeInfo.mapToVolumeInfoDto(): VolumeInfoDto {
+    return VolumeInfoDto(
+        pageCount = this.pageCount,
+        printType = this.printType,
+        previewLink = this.previewLink,
+        canonicalVolumeLink = this.canonicalVolumeLink,
+        description = this.description,
+        language = this.language,
+        title = this.title,
+        imageLinks = this.imageLinks?.mapToDtoImageLinks(),
+        publisher = this.publisher,
+        publishedDate = this.publishedDate,
+        categories = this.categories,
+        maturityRating = this.maturityRating,
+        allowAnonLogging = this.allowAnonLogging,
+        contentVersion = this.contentVersion,
+        authors = this.authors,
+        infoLink = this.infoLink,
+        subtitle = this.subtitle
+    )
+}
+
+fun VolumeInfo.mapToVolumeInfoLocal(): VolumeInfoLocal {
+    return VolumeInfoLocal(
+        pageCount = this.pageCount,
+        printType = this.printType,
+        previewLink = this.previewLink,
+        canonicalVolumeLink = this.canonicalVolumeLink,
+        description = this.description,
+        language = this.language,
+        title = this.title,
+        imageLinksLocal = this.imageLinks?.mapToLocalImageLinks(),
+        publisher = this.publisher,
+        publishedDate = this.publishedDate,
+        categories = this.categories,
+        maturityRating = this.maturityRating,
+        allowAnonLogging = this.allowAnonLogging,
+        contentVersion = this.contentVersion,
+        authors = this.authors,
+        infoLink = this.infoLink,
+        subtitle = this.subtitle
+    )
+}
+
+fun ImageLinksLocal.mapToDomainImageLinks(): ImageLinks {
+    return ImageLinks(
+        thumbnail = this.thumbnail,
+        smallThumbnail = this.smallThumbnail
+    )
+}
+
+fun ImageLinks.mapToLocalImageLinks(): ImageLinksLocal {
+    return ImageLinksLocal(
+        thumbnail = this.thumbnail,
+        smallThumbnail = this.smallThumbnail
+    )
+}
+
+fun ImageLinksDto.mapToDomainImageLinks(): ImageLinks {
+    return ImageLinks(
+        thumbnail = this.thumbnail,
+        smallThumbnail = this.smallThumbnail
+    )
+}
+
+fun ImageLinks.mapToDtoImageLinks(): ImageLinksDto {
+    return ImageLinksDto(
         thumbnail = this.thumbnail,
         smallThumbnail = this.smallThumbnail
     )

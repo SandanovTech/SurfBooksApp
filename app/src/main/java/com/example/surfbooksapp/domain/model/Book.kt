@@ -2,20 +2,12 @@ package com.example.surfbooksapp.domain.model
 
 
 data class Book(
-    val totalItems: Int? = null,
-    val kind: String? = null,
-    val items: List<DomainItemsItem?>? = null
+    val id: String,
+    val volumeInfo: VolumeInfo? = null,
+    var isFavourite : Boolean = false
 )
 
-data class DomainItemsItem(
-    val kind: String? = null,
-    val domainVolumeInfo: DomainVolumeInfo? = null,
-    val etag: String? = null,
-    val id: String? = null,
-    val selfLink: String? = null
-)
-
-data class DomainVolumeInfo(
+data class VolumeInfo(
     val pageCount: Int? = null,
     val printType: String? = null,
     val previewLink: String? = null,
@@ -23,7 +15,7 @@ data class DomainVolumeInfo(
     val description: String? = null,
     val language: String? = null,
     val title: String? = null,
-    val imageLinks: DomainImageLinks? = null,
+    val imageLinks: ImageLinks? = null,
     val publisher: String? = null,
     val publishedDate: String? = null,
     val categories: List<String?>? = null,
@@ -35,7 +27,7 @@ data class DomainVolumeInfo(
     val subtitle: String? = null
 )
 
-data class DomainImageLinks(
+data class ImageLinks(
     val thumbnail: String? = null,
     val smallThumbnail: String? = null
 )

@@ -9,6 +9,6 @@ import javax.inject.Inject
 class GetBooksByNameUseCase @Inject constructor(private val repository: Repository) {
     fun invoke(name: String) : Flow<List<Book>> = flow {
        val books = repository.getBooksByName(name)
-        emit(listOf(books))
+        emit(books)
     }
 }

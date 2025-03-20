@@ -5,8 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.surfbooksapp.domain.model.Book
 import com.example.surfbooksapp.domain.usecases.AddToFavouriteUseCase
 import com.example.surfbooksapp.domain.usecases.DeleteFromFavouriteUseCase
-import com.example.surfbooksapp.domain.usecases.GetBooksByNameUseCase
-import com.example.surfbooksapp.presentation.MainScreenState
+import com.example.surfbooksapp.domain.usecases.GetAllBooksUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,27 +16,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    private val getBooksByNameUseCase: GetBooksByNameUseCase,
+class FavouriteViewModel @Inject constructor(
+    private val getAllBooksUseCase: GetAllBooksUseCase,
     private val addToFavouriteUseCase: AddToFavouriteUseCase,
     private val deleteFromFavouriteUseCase: DeleteFromFavouriteUseCase,
-) : ViewModel() , BaseViewModel {
-
-    private val _state: MutableStateFlow<MainScreenState> =
-        MutableStateFlow(MainScreenState.Initial)
-    val state = _state.asStateFlow()
+) : ViewModel(), BaseViewModel{
 
     private val _books: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
     val books = _books.asStateFlow()
 
     init {
-        _state.value = MainScreenState.Initial
+        getBooksByFavourite()
     }
-
-    fun clear() {
-        _state.value = MainScreenState.Initial
-    }
-
     override fun addToFavorite(book: Book, isFavourite: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             addToFavouriteUseCase.invoke(book, isFavourite)
@@ -50,19 +40,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-
-    fun getBooksByName(name: String) {
-        _state.value = MainScreenState.Loading
-        getBooksByNameUseCase.invoke(name).onEach { books ->
-            for (items in books) {
-                if (items.id.isEmpty()) {
-                    _state.value = MainScreenState.Error
-                } else {
-                    _books.value = books
-                    _state.value = MainScreenState.Success(books)
-                }
-            }
+    private fun getBooksByFavourite() {
+        getAllBooksUseCase.invoke().onEach {
+            _books.value = it
         }.launchIn(viewModelScope)
     }
-
 }

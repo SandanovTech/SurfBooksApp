@@ -2,35 +2,20 @@ package com.example.surfbooksapp.data.network.model
 
 import kotlinx.serialization.SerialName
 
-data class BookResponse(
-	@SerialName("totalItems")
-	val totalItems: Int? = null,
 
-	@SerialName("kind")
-	val kind: String? = null,
-
-	@SerialName("items")
-	val items: List<ItemsItem?>? = null
-)
-
-data class ItemsItem(
-	@SerialName("kind")
-	val kind: String? = null,
-
-	@SerialName("volumeInfo")
-	val volumeInfo: VolumeInfo? = null,
-
-	@SerialName("etag")
-	val etag: String? = null,
-
+data class BookDto(
 	@SerialName("id")
-	val id: String? = null,
-
-	@SerialName("selfLink")
-	val selfLink: String? = null
+    val id: String,
+	@SerialName("volumeInfo")
+    val volumeInfo: VolumeInfoDto? = null,
 )
 
-data class VolumeInfo(
+data class BookResponse(
+    @SerialName("items")
+    val items: List<BookDto>,
+)
+
+data class VolumeInfoDto(
 
 	@SerialName("pageCount")
 	val pageCount: Int? = null,
@@ -54,7 +39,7 @@ data class VolumeInfo(
 	val title: String? = null,
 
 	@SerialName("imageLinks")
-	val imageLinks: ImageLinks? = null,
+	val imageLinks: ImageLinksDto? = null,
 
 	@SerialName("publisher")
 	val publisher: String? = null,
@@ -81,14 +66,14 @@ data class VolumeInfo(
 	val infoLink: String? = null,
 
 	@SerialName("subtitle")
-	val subtitle: String? = null
+	val subtitle: String? = null,
 )
 
-data class ImageLinks(
+data class ImageLinksDto(
 
 	@SerialName("thumbnail")
 	val thumbnail: String? = null,
 
 	@SerialName("smallThumbnail")
-	val smallThumbnail: String? = null
+	val smallThumbnail: String? = null,
 )

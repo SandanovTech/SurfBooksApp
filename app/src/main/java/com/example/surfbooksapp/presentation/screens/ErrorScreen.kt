@@ -19,12 +19,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.surfbooksapp.presentation.viewModels.MainViewModel
 
 @Composable
-fun ErrorScreen(innerPadding: PaddingValues, query : String) {
+fun ErrorScreen(modifier: Modifier = Modifier,query : String) {
     val vm : MainViewModel = hiltViewModel()
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
